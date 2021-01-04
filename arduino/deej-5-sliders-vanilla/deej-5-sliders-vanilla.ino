@@ -11,13 +11,8 @@ const int analogInputs[NUM_SLIDERS] = {A0, A1, A2, A3, A6};
 
 int analogSliderValues[NUM_SLIDERS];
 int values[NUM_SLIDERS];
-String appnames[NUM_SLIDERS] = {"Master", "Discord", "Game", "Firefox", "Spotify"};
+String appnames[NUM_SLIDERS] = {"Master", "Discord", "Game", "Zoom", "Spotify"};
 
-int value1 = analogSliderValues[0];
-int value2 = analogSliderValues[1];
-int value3 = analogSliderValues[2];
-int value4 = analogSliderValues[3];
-int value5 = analogSliderValues[4];
 int volumePercentage;
 void setup() { 
   Serial.begin(9600);
@@ -39,11 +34,9 @@ void setup() {
   display.display(); 
   display.clearDisplay();
   updateSliderValues();
-  value1 = analogSliderValues[0];
-  value2 = analogSliderValues[1];
-  value3 = analogSliderValues[2];
-  value4 = analogSliderValues[3];
-  value5 = analogSliderValues[4];
+  for (int i = 0; i < NUM_SLIDERS; i++) {
+     values[i] = analogSliderValues[i];
+  }
 }
 
 void loop() {
@@ -52,25 +45,22 @@ void loop() {
   
   for (int i = 0; i < NUM_SLIDERS; i++) {
      analogSliderValues[i] = analogRead(analogInputs[i]);
-     if(abs(values[i] - analogSliderValues[i]) > 30){
+     if(abs(values[i] - analogSliderValues[i]) > 9){
         values[i] = analogSliderValues[i];
-        display.setTextSize(1);
+        display.setTextSize(2);
         display.setTextColor(WHITE);
         display.setCursor(0, 10);
         display.println(appnames[i]);
         volumePercentage = map(analogSliderValues[i], 0, 1023, 0, 100);
         display.setTextSize(3);
         display.println(volumePercentage);
-        display.display();
-        
-     }else{
-      display.clearDisplay();
-      display.print("no recent change");
+        display.display();  
      }
   }
   display.clearDisplay();
   delay(10);
 }
+
 
 
 void updateSliderValues() {
